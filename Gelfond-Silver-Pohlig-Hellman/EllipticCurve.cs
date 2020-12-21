@@ -96,7 +96,7 @@ namespace GSPH
             return result;
         }
 
-        public Point MultiplyPoint(Point P, int n)
+        public Point MultiplyPoint(int n, Point P)
         {
             if ((n % N) == 0 || P is null)
             {
@@ -105,7 +105,7 @@ namespace GSPH
 
             if (n < 0)
             {
-                return GetNegativePoint(MultiplyPoint(P, -n));
+                return GetNegativePoint(MultiplyPoint(-n, P));
             }
 
             Point result = null;
@@ -123,6 +123,31 @@ namespace GSPH
             }
 
             return result;
+        }
+
+        public int GetLog(Point P, Point Q)
+        {
+            if (!IsPointOnCurve(P)) throw new ArgumentException($"Point {P} is not on curve {this}");
+            if (!IsPointOnCurve(Q)) throw new ArgumentException($"Point {Q} is not on curve {this}");
+
+            //Random random = new Random();
+            int logarithm;
+
+            var start = 1; //random.Next(N);
+            var R = MultiplyPoint(start, Q);
+
+            for (int i = 1; i < N; i++)
+            {
+                if (P == R)
+                {
+                    logarithm = i % N;
+                    return logarithm;
+                }
+
+                R = AddPoints(R, Q);
+            }
+
+            throw new Exception("Logarithm not found.");
         }
 
         public override string ToString()

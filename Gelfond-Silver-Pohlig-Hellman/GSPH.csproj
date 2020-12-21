@@ -35,6 +35,7 @@
     <Compile Include="EllipticCurvePoint.cs" />
     <Compile Include="EllipticCurve.cs" />
     <Compile Include="BigIntegerExtensions.cs" />
+    <Compile Include="GelfondMethod.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

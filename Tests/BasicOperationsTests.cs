@@ -1,5 +1,4 @@
-﻿using System;
-using System.Numerics;
+﻿using System.Numerics;
 using GSPH;
 using NUnit.Framework;
 
@@ -67,7 +66,7 @@ namespace Tests
             Point P = new Point(34, 16);
             Point expected = new Point(19, 0);
 
-            Point actual = ECC.MultiplyPoint(P, 45);
+            Point actual = ECC.MultiplyPoint(45, P);
 
             Assert.AreEqual(expected, actual);
         }
@@ -81,6 +80,48 @@ namespace Tests
             Point expected = new Point(10, 90);
 
             Point actual = ECC.GetNegativePoint(P);
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void GetLog_PointOnCurve_CorrectResult()
+        {
+            EllipticCurve ECC = new EllipticCurve(1, 9, pField: 97, groupOrder: 90);
+            Point P = new Point(72, 48);
+            Point Q = new Point(72, 49);
+
+            int expected = 2; //89
+
+            int actual = ECC.GetLog(P, Q);
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void GetLog_SamePointsOnCurve_ReturnsOne()
+        {
+            EllipticCurve ECC = new EllipticCurve(1, 9, pField: 97, groupOrder: 90);
+            Point P = new Point(72, 49);
+            Point Q = new Point(72, 49);
+
+            int expected = 1;
+
+            int actual = ECC.GetLog(P, Q);
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void GetLog_InfPoint_ReturnsCorrectResult()
+        {
+            EllipticCurve ECC = new EllipticCurve(1, 9, pField: 97, groupOrder: 90);
+            Point P = null;
+            Point Q = new Point(19, 0);
+
+            int expected = 2;
+
+            int actual = ECC.GetLog(P, Q);
 
             Assert.AreEqual(expected, actual);
         }
