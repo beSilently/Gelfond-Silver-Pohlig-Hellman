@@ -35,22 +35,34 @@ namespace GSPH
             if (!IsPointOnCurve(P)) throw new ArgumentException($"Point {P} is not on curve {this}");
             if (!IsPointOnCurve(Q)) throw new ArgumentException($"Point {Q} is not on curve {this}");
 
+            // The point at infinity is represented as null.
             if (P is null) return Q;
             if (Q is null) return P;
 
-            if (P.X == Q.X && P.Y != Q.Y)
-            {
-                return null;
-            }
-
             BigInteger m;
-            if (P.X == Q.X)
+
+            if (P.X != Q.X)
             {
-                m = (((3 * P.X * P.X) + a) * (2 * P.Y).ModInverse(p)) % p;
+                m = ((P.Y - Q.Y) * (P.X - Q.X).ModInverse(p)) % p;
             }
             else
             {
-                m = ((P.Y - Q.Y) * (P.X - Q.X).ModInverse(p)) % p;
+                if (P.Y == 0 && Q.Y == 0)
+                {
+                    // This may only happen if p1 = p2 is a root of the elliptic
+                    // curve, hence the line is vertical.
+                    return null;
+                }
+                else if (P.Y == Q.Y)
+                {
+                    // The points are the same, but the line is not vertical.
+                    m = (((3 * P.X * P.X) + a) * (2 * P.Y).ModInverse(p)) % p;
+                }
+                else
+                {
+                    // The points are the same and the line is vertical.
+                    return null;
+                }
             }
 
             BigInteger x = (m * m - P.X - Q.X) % p;

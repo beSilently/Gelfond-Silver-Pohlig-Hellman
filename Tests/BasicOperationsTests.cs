@@ -57,7 +57,7 @@ namespace Tests
             EllipticCurve ECC = new EllipticCurve(1, 9, pField: 97, groupOrder: 90);
             Point P = new Point(19, 0);
 
-            Assert.Throws<ArgumentException>(() => ECC.AddPoints(P, P));
+            Assert.IsNull(ECC.AddPoints(P, P));
         }
 
         [Test]
